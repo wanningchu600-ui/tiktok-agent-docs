@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>TikTok Analytics Agent — код авторизации</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 60px auto; padding: 0 20px; color: #222; }
+    h1 { font-size: 20px; }
+    .box { background: #f4f4f4; border-radius: 8px; padding: 16px; word-break: break-all; font-family: monospace; margin: 16px 0; }
+    .err { color: #c0392b; }
+    button { padding: 8px 16px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Авторизация TikTok получена</h1>
+  <p>Скопируйте код ниже и вставьте его в терминал, где запущен <code>collector.py</code>.</p>
+  <div id="result" class="box">Читаю адресную строку...</div>
+  <button onclick="copyCode()">Скопировать код</button>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    const error = params.get("error");
+    const box = document.getElementById("result");
+
+    if (code) {
+      box.textContent = code;
+    } else if (error) {
+      box.textContent = "Ошибка авторизации: " + error + " — " + (params.get("error_description") || "");
+      box.classList.add("err");
+    } else {
+      box.textContent = "Код не найден в адресной строке. Проверьте, что вы перешли сюда из TikTok.";
+      box.classList.add("err");
+    }
+
+    function copyCode() {
+      navigator.clipboard.writeText(box.textContent).then(() => alert("Скопировано!"));
+    }
+  </script>
+</body>
+</html>
